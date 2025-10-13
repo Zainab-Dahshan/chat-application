@@ -1,0 +1,33 @@
+# Core Django dependencies
+Django==5.2.7
+channels==4.2.0
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.4.0
+
+# Database
+psycopg2-binary==2.9.10
+
+# Redis for production channel layer and caching
+channels-redis==4.6.0
+redis==5.2.0
+
+# Static file serving
+whitenoise==6.8.2
+
+# CORS support
+django-cors-headers==4.6.0
+
+# Environment variables
+python-decouple==3.8
+
+# WebSocket support (already included with channels)
+# daphne is included with channels
+
+# Additional utilities
+gunicorn==23.0.0  # Optional: for WSGI deployment
+celery==5.4.0  # Optional: for background tasks
+
+# Development dependencies (can be in separate dev-requirements.txt)
+# pytest==8.3.4
+# pytest-django==4.9.0
+# pytest-asyncio==0.24.0

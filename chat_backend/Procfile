@@ -1,0 +1,3 @@
+# Heroku Procfile for Django Channels application
+release: python manage.py migrate
+web: daphne -b 0.0.0.0 -p $PORT chat_backend.asgi:application
