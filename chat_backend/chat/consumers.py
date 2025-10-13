@@ -166,7 +166,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     @database_sync_to_async
-    def save_message(self, message, room_name):
+    def save_message(self, message, room_name, message_type='text', file_info=None):
         """Save message to database"""
         try:
             room = ChatRoom.objects.get(name=room_name)
@@ -178,8 +178,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chat_message = ChatMessage.objects.create(
             room=room,
             user=self.user,
-            message=message
+            message=message,
+            message_type=message_type
         )
+        
+        # Handle file information if provided
+        if file_info:
+            chat_message.file_name = file_info.get('file_name')
+            chat_message.file_size = file_info.get('file_size')
+            chat_message.mime_type = file_info.get('mime_type')
+            chat_message.save()
+        
         return chat_message
 
     async def receive(self, text_data):
@@ -206,42 +215,67 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }))
                 return
             
-            # Extract message
+            # Extract message details
             message = text_data_json.get('message', '').strip()
+            message_type = text_data_json.get('message_type', 'text')
+            file_info = text_data_json.get('file_info', None)
             
-            if not message:
-                logger.warning(f"Empty message content from user {self.user.username}")
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Message content cannot be empty'
-                }))
-                return
-            
-            # Validate message length
-            if len(message) > 1000:
-                logger.warning(f"Message too long from user {self.user.username}: {len(message)} characters")
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Message too long (max 1000 characters)'
-                }))
-                return
+            # Validate based on message type
+            if message_type == 'text':
+                if not message:
+                    logger.warning(f"Empty message content from user {self.user.username}")
+                    await self.send(text_data=json.dumps({
+                        'type': 'error',
+                        'message': 'Message content cannot be empty'
+                    }))
+                    return
+                
+                # Validate message length
+                if len(message) > 1000:
+                    logger.warning(f"Message too long from user {self.user.username}: {len(message)} characters")
+                    await self.send(text_data=json.dumps({
+                        'type': 'error',
+                        'message': 'Message too long (max 1000 characters)'
+                    }))
+                    return
+            else:
+                # File message validation
+                if not file_info or not file_info.get('file_name'):
+                    logger.warning(f"Invalid file info from user {self.user.username}")
+                    await self.send(text_data=json.dumps({
+                        'type': 'error',
+                        'message': 'File information is required for file messages'
+                    }))
+                    return
             
             # Log the message
-            logger.info(f"User {self.user.username} sending message in room {self.room_name}: {message[:50]}...")
+            if message_type == 'text':
+                logger.info(f"User {self.user.username} sending message in room {self.room_name}: {message[:50]}...")
+            else:
+                logger.info(f"User {self.user.username} sending {message_type} file in room {self.room_name}: {file_info.get('file_name', 'unknown')}")
             
             # Save message to database
-            chat_message = await self.save_message(message, self.room_name)
+            chat_message = await self.save_message(message, self.room_name, message_type, file_info)
             
             # Send message to room group
+            message_data = {
+                'type': 'chat_message',
+                'message': message,
+                'username': self.user.username,
+                'timestamp': self.get_current_timestamp(),
+                'message_id': chat_message.id,
+                'message_type': message_type
+            }
+            
+            # Add file information if it's a file message
+            if message_type != 'text' and file_info:
+                message_data['file_name'] = file_info.get('file_name')
+                message_data['file_size'] = file_info.get('file_size')
+                message_data['mime_type'] = file_info.get('mime_type')
+            
             await self.channel_layer.group_send(
                 self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message,
-                    'username': self.user.username,
-                    'timestamp': self.get_current_timestamp(),
-                    'message_id': chat_message.id
-                }
+                message_data
             )
             
             logger.info(f"Message broadcasted successfully from user {self.user.username}")
@@ -261,6 +295,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             username = event['username']
             timestamp = event['timestamp']
             message_id = event.get('message_id')
+            message_type = event.get('message_type', 'text')
             
             logger.info(f"Broadcasting message to user {self.user.username} in room {self.room_name}: {message[:50]}...")
             
@@ -269,14 +304,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 logger.warning(f"Incomplete message event data: {event}")
                 return
             
-            # Send message to WebSocket
-            await self.send(text_data=json.dumps({
+            # Build response data
+            response_data = {
                 'type': 'chat_message',
                 'message': message,
                 'username': username,
                 'timestamp': timestamp,
-                'message_id': message_id
-            }))
+                'message_id': message_id,
+                'message_type': message_type
+            }
+            
+            # Add file information if it's a file message
+            if message_type != 'text':
+                response_data['file_name'] = event.get('file_name')
+                response_data['file_size'] = event.get('file_size')
+                response_data['mime_type'] = event.get('mime_type')
+            
+            # Send message to WebSocket
+            await self.send(text_data=json.dumps(response_data))
             
             # Create notifications for offline users in the room
             if self.user.username != username:  # Don't notify self

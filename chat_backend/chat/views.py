@@ -122,7 +122,11 @@ class LeaveRoomView(APIView):
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 import logging
+import os
+import uuid
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -239,3 +243,75 @@ def get_online_users(request):
             {'error': 'Failed to get online users'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+class FileUploadView(APIView):
+    """Handle file uploads for chat messages"""
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def post(self, request):
+        """Upload a file and return file information"""
+        try:
+            file = request.FILES.get('file')
+            if not file:
+                return Response(
+                    {'error': 'No file provided'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate file size (max 10MB)
+            max_size = 10 * 1024 * 1024  # 10MB
+            if file.size > max_size:
+                return Response(
+                    {'error': 'File size exceeds 10MB limit'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate file type
+            allowed_types = [
+                'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+                'video/mp4', 'video/webm', 'video/quicktime',
+                'audio/mpeg', 'audio/wav', 'audio/ogg',
+                'application/pdf', 'application/msword', 
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'text/plain', 'text/csv'
+            ]
+            
+            if file.content_type not in allowed_types:
+                return Response(
+                    {'error': 'File type not allowed'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Generate unique filename
+            file_extension = os.path.splitext(file.name)[1]
+            unique_filename = f"{uuid.uuid4()}{file_extension}"
+            
+            # Create uploads directory if it doesn't exist
+            upload_dir = os.path.join(settings.MEDIA_ROOT, 'chat_files')
+            os.makedirs(upload_dir, exist_ok=True)
+            
+            # Save file
+            file_path = os.path.join(upload_dir, unique_filename)
+            with open(file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            
+            # Return file information
+            file_info = {
+                'file_name': file.name,
+                'file_size': file.size,
+                'mime_type': file.content_type,
+                'file_url': f"{settings.MEDIA_URL}chat_files/{unique_filename}"
+            }
+            
+            logger.info(f"User {request.user.username} uploaded file: {file.name} ({file.size} bytes)")
+            return Response(file_info, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            logger.error(f"Error uploading file: {str(e)}")
+            return Response(
+                {'error': 'Failed to upload file'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

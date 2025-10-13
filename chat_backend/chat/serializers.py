@@ -55,11 +55,62 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 class ChatMessageSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    file_url = serializers.SerializerMethodField()
     
     class Meta:
         model = ChatMessage
-        fields = ['id', 'room', 'user', 'username', 'message', 'timestamp']
-        read_only_fields = ['id', 'timestamp', 'room', 'user']
+        fields = ['id', 'room', 'user', 'username', 'message', 'message_type', 'file', 'file_url', 'file_name', 'file_size', 'mime_type', 'timestamp']
+        read_only_fields = ['id', 'timestamp', 'room', 'user', 'file_url', 'file_name', 'file_size', 'mime_type']
+        extra_kwargs = {
+            'file': {'write_only': True, 'required': False},
+            'message': {'required': False}
+        }
+    
+    def get_file_url(self, obj):
+        """Get the full URL for the file"""
+        if obj.file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.file.url)
+            return obj.file.url
+        return None
+    
+    def validate(self, data):
+        """Validate that either message or file is provided"""
+        message = data.get('message')
+        file = data.get('file')
+        message_type = data.get('message_type', 'text')
+        
+        if message_type == 'text' and not message:
+            raise serializers.ValidationError({"message": "Message content is required for text messages"})
+        
+        if message_type != 'text' and not file:
+            raise serializers.ValidationError({"file": "File is required for non-text messages"})
+        
+        if message and len(message) > 1000:
+            raise serializers.ValidationError({"message": "Message too long (max 1000 characters)"})
+        
+        return data
+    
+    def create(self, validated_data):
+        """Create message with file handling"""
+        file = validated_data.pop('file', None)
+        message = super().create(validated_data)
+        
+        if file:
+            # Set file metadata
+            message.file_name = file.name
+            message.file_size = file.size
+            
+            # Try to detect MIME type
+            import mimetypes
+            mime_type, _ = mimetypes.guess_type(file.name)
+            if mime_type:
+                message.mime_type = mime_type
+            
+            message.save()
+        
+        return message
 
 
 class UserRoomSerializer(serializers.ModelSerializer):

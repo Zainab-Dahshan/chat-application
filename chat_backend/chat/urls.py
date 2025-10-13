@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     RegisterView, ProfileView, LogoutView, 
     ChatRoomListCreateView, ChatRoomMessagesView, SendMessageView, JoinRoomView, LeaveRoomView,
-    get_notifications, mark_notification_read, mark_all_notifications_read, get_user_presence, get_online_users
+    get_notifications, mark_notification_read, mark_all_notifications_read, get_user_presence, get_online_users,
+    FileUploadView
 )
 
 app_name = 'chat'
@@ -23,6 +24,9 @@ urlpatterns = [
     path('notifications/', get_notifications, name='get-notifications'),
     path('notifications/<int:notification_id>/mark-read/', mark_notification_read, name='mark-notification-read'),
     path('notifications/mark-all-read/', mark_all_notifications_read, name='mark-all-notifications-read'),
+    
+    # File upload endpoint
+    path('upload-file/', FileUploadView.as_view(), name='upload-file'),
     
     # User presence endpoints
     path('users/<str:username>/presence/', get_user_presence, name='get-user-presence'),

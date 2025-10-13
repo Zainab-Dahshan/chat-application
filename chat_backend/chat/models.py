@@ -11,16 +11,32 @@ class ChatRoom(models.Model):
 
 
 class ChatMessage(models.Model):
+    MESSAGE_TYPES = [
+        ('text', 'Text'),
+        ('image', 'Image'),
+        ('file', 'File'),
+        ('audio', 'Audio'),
+        ('video', 'Video'),
+    ]
+    
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
-    message = models.TextField()
+    message = models.TextField(blank=True, null=True)
+    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default='text')
+    file = models.FileField(upload_to='chat_files/%Y/%m/%d/', blank=True, null=True)
+    file_name = models.CharField(max_length=255, blank=True, null=True)
+    file_size = models.IntegerField(blank=True, null=True)
+    mime_type = models.CharField(max_length=100, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ['timestamp']
     
     def __str__(self):
-        return f'{self.user.username}: {self.message[:50]}'
+        if self.message_type == 'text':
+            return f'{self.user.username}: {self.message[:50]}'
+        else:
+            return f'{self.user.username}: [{self.message_type}] {self.file_name or "file"}'
 
 
 class UserRoom(models.Model):
