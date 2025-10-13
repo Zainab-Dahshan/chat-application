@@ -7,6 +7,7 @@ import requests
 response = requests.post('http://localhost:8000/api/auth/register/', json={
     'username': 'websocketuser',
     'password': 'testpass123',
+    'password2': 'testpass123',
     'email': 'websocket@example.com'
 })
 
@@ -28,10 +29,14 @@ else:
         exit(1)
 
 async def test_websocket():
-    uri = f"ws://localhost:8000/ws/chat/testroom/?token={token}"
+    # Try with token in Authorization header
+    uri = "ws://localhost:8000/ws/chat/testroom/"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
     
     try:
-        async with websockets.connect(uri) as websocket:
+        async with websockets.connect(uri, additional_headers=headers) as websocket:
             print("Connected to WebSocket")
             
             # Send a test message
