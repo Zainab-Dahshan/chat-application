@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from .models import ChatRoom, ChatMessage, UserRoom
+from .models import ChatRoom, ChatMessage, UserRoom, Notification, UserPresence
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -70,3 +70,20 @@ class UserRoomSerializer(serializers.ModelSerializer):
         model = UserRoom
         fields = ['id', 'user', 'username', 'room', 'room_name', 'joined_at']
         read_only_fields = ['id', 'joined_at']
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    sender_username = serializers.CharField(source='sender.username', read_only=True)
+    
+    class Meta:
+        model = Notification
+        fields = ['id', 'notification_type', 'title', 'message', 'is_read', 'sender_username', 'room_name', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class UserPresenceSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = UserPresence
+        fields = ['username', 'is_online', 'last_seen', 'current_room']

@@ -1,0 +1,120 @@
+INFO 2025-10-14 00:20:22,837 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:20:22,854 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:20:22,866 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:20:22,873 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:20:22,874 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:20:22,876 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:20:22,886 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:20:22,902 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:20:22,912 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+ERROR 2025-10-14 00:20:22,918 consumers Error generating timestamp: No module named 'pytz'
+INFO 2025-10-14 00:20:22,923 consumers Message broadcasted successfully from user websocketuser
+INFO 2025-10-14 00:20:22,929 consumers Broadcasting message to user websocketuser in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:20:22,931 consumers Message successfully sent to user websocketuser
+INFO 2025-10-14 00:20:24,936 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:20:24,938 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-14 00:31:20,204 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:31:20,206 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:31:20,209 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:31:20,211 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:31:20,212 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:31:20,215 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:31:20,218 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:31:20,224 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:31:20,226 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+ERROR 2025-10-14 00:31:20,231 consumers Error generating timestamp: No module named 'pytz'
+INFO 2025-10-14 00:31:20,232 consumers Message broadcasted successfully from user websocketuser
+INFO 2025-10-14 00:31:20,235 consumers Broadcasting message to user websocketuser in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:31:20,236 consumers Message successfully sent to user websocketuser
+INFO 2025-10-14 00:31:22,244 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:31:22,246 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-14 00:33:23,552 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:33:23,556 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:33:23,576 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:33:23,579 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:33:23,584 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:33:23,585 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:33:23,590 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:33:23,605 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:33:23,610 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:33:23,621 consumers Message broadcasted successfully from user websocketuser
+INFO 2025-10-14 00:33:23,626 consumers Broadcasting message to user websocketuser in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:33:23,628 consumers Message successfully sent to user websocketuser
+INFO 2025-10-14 00:33:25,629 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:33:25,632 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-14 00:46:03,839 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:46:03,841 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:46:03,850 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:46:03,852 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:46:03,857 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:46:03,985 consumers User presence updated: websocketuser - online: True
+INFO 2025-10-14 00:46:03,985 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:46:03,987 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:46:03,994 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:46:03,996 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+ERROR 2025-10-14 00:46:03,997 consumers Error processing message from user websocketuser: 'ChatConsumer' object has no attribute 'save_message'
+ERROR 2025-10-14 00:46:04,003 consumers Traceback (most recent call last):
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 216, in receive
+    chat_message = await self.save_message(message, self.room_name)
+                         ^^^^^^^^^^^^^^^^^
+AttributeError: 'ChatConsumer' object has no attribute 'save_message'. Did you mean: 'chat_message'?
+
+INFO 2025-10-14 00:46:06,015 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:46:06,142 consumers User presence updated: websocketuser - online: False
+INFO 2025-10-14 00:46:06,143 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-14 00:48:39,814 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:48:39,820 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:48:39,834 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:48:39,837 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:48:39,838 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:48:39,962 consumers User presence updated: websocketuser - online: True
+INFO 2025-10-14 00:48:39,963 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:48:39,967 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:48:39,977 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:48:39,979 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+ERROR 2025-10-14 00:48:39,990 consumers Error processing message from user websocketuser: ChatRoom matching query does not exist.
+ERROR 2025-10-14 00:48:40,003 consumers Traceback (most recent call last):
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 227, in receive
+    chat_message = await self.save_message(message, self.room_name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\asgiref\sync.py", line 502, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\laptop\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\db.py", line 13, in thread_handler
+    return super().thread_handler(loop, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\asgiref\sync.py", line 556, in thread_handler
+    return func(*args, **kwargs)
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 171, in save_message
+    room = ChatRoom.objects.get(name=room_name)
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\django\db\models\query.py", line 633, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+chat.models.ChatRoom.DoesNotExist: ChatRoom matching query does not exist.
+
+INFO 2025-10-14 00:48:41,987 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:48:42,111 consumers User presence updated: websocketuser - online: False
+INFO 2025-10-14 00:48:42,112 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-14 00:51:52,541 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-14 00:51:52,545 consumers Attempting to validate JWT token
+INFO 2025-10-14 00:51:52,554 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-14 00:51:52,561 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-14 00:51:52,566 consumers User websocketuser authenticated successfully
+INFO 2025-10-14 00:51:52,686 consumers User presence updated: websocketuser - online: True
+INFO 2025-10-14 00:51:52,687 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-14 00:51:52,689 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-14 00:51:52,695 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-14 00:51:52,697 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:51:52,810 consumers Created new room: testroom
+INFO 2025-10-14 00:51:52,906 consumers Message broadcasted successfully from user websocketuser
+INFO 2025-10-14 00:51:52,908 consumers Broadcasting message to user websocketuser in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-14 00:51:52,909 consumers Message successfully sent to user websocketuser
+INFO 2025-10-14 00:51:54,717 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-14 00:51:54,834 consumers User presence updated: websocketuser - online: False
+INFO 2025-10-14 00:51:54,836 consumers User websocketuser left room group: chat_testroom

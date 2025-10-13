@@ -175,8 +175,8 @@ LOGGING = {
             'style': '{',
         },
         'json': {
-            'format': '{"timestamp": "{asctime}", "level": "{levelname}", "module": "{module}", "message": "{message}"}',
-            'style': '{',
+            'format': '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "module": "%(module)s", "message": "%(message)s"}',
+            'style': '%',
         },
     },
     'filters': {
@@ -208,7 +208,7 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'chat.log',
             'maxBytes': 1024 * 1024 * 15,  # 15MB
             'backupCount': 10,
-            'formatter': 'json',
+            'formatter': 'simple',
         },
         'websocket_file': {
             'level': 'INFO',
@@ -216,7 +216,7 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'websocket.log',
             'maxBytes': 1024 * 1024 * 15,  # 15MB
             'backupCount': 10,
-            'formatter': 'json',
+            'formatter': 'simple',
         },
         'security_file': {
             'level': 'WARNING',
