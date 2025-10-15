@@ -118,3 +118,51 @@ INFO 2025-10-14 00:51:52,909 consumers Message successfully sent to user websock
 INFO 2025-10-14 00:51:54,717 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
 INFO 2025-10-14 00:51:54,834 consumers User presence updated: websocketuser - online: False
 INFO 2025-10-14 00:51:54,836 consumers User websocketuser left room group: chat_testroom
+INFO 2025-10-16 00:50:01,850 consumers WebSocket connection attempt for room: Zainab-Dahshan's Org
+WARNING 2025-10-16 00:50:01,875 consumers No valid authentication header provided
+INFO 2025-10-16 00:50:02,005 consumers WebSocket disconnect for user AnonymousUser from room Zainab-Dahshan's Org, close_code: 1006
+ERROR 2025-10-16 00:50:02,040 consumers Error during WebSocket disconnect: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+ERROR 2025-10-16 00:50:02,135 consumers Traceback (most recent call last):
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 101, in disconnect
+    await self.channel_layer.group_discard(
+    ...<2 lines>...
+    )
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 353, in group_discard
+    assert self.valid_group_name(group), "Invalid group name"
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 166, in valid_group_name
+    raise TypeError(self.invalid_name_error.format("Group", name))
+TypeError: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+
+INFO 2025-10-16 00:50:04,155 consumers WebSocket connection attempt for room: Zainab-Dahshan's Org
+WARNING 2025-10-16 00:50:04,201 consumers No valid authentication header provided
+INFO 2025-10-16 00:50:04,274 consumers WebSocket disconnect for user AnonymousUser from room Zainab-Dahshan's Org, close_code: 1006
+ERROR 2025-10-16 00:50:04,343 consumers Error during WebSocket disconnect: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+ERROR 2025-10-16 00:50:04,450 consumers Traceback (most recent call last):
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 101, in disconnect
+    await self.channel_layer.group_discard(
+    ...<2 lines>...
+    )
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 353, in group_discard
+    assert self.valid_group_name(group), "Invalid group name"
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 166, in valid_group_name
+    raise TypeError(self.invalid_name_error.format("Group", name))
+TypeError: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+
+INFO 2025-10-16 00:50:13,812 consumers WebSocket connection attempt for room: Zainab-Dahshan's Org
+WARNING 2025-10-16 00:50:13,816 consumers No valid authentication header provided
+INFO 2025-10-16 00:50:13,828 consumers WebSocket disconnect for user AnonymousUser from room Zainab-Dahshan's Org, close_code: 1006
+ERROR 2025-10-16 00:50:13,832 consumers Error during WebSocket disconnect: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+ERROR 2025-10-16 00:50:13,856 consumers Traceback (most recent call last):
+  File "G:\Freelance\PortofolioProjects\chat-application\chat_backend\chat\consumers.py", line 101, in disconnect
+    await self.channel_layer.group_discard(
+    ...<2 lines>...
+    )
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 353, in group_discard
+    assert self.valid_group_name(group), "Invalid group name"
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "g:\Freelance\PortofolioProjects\.venv\Lib\site-packages\channels\layers.py", line 166, in valid_group_name
+    raise TypeError(self.invalid_name_error.format("Group", name))
+TypeError: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
+
