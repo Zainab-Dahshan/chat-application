@@ -1,14 +1,12 @@
 export function connectToWebSocket(roomName, token, onMessage) {
-    const socket = new WebSocket(`ws://localhost:8000/ws/chat/${roomName}/`);
+    const wsBase = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws';
+    const socket = new WebSocket(`${wsBase}/chat/${roomName}/`);
 
     socket.onopen = () => {
         console.log('WebSocket connection established');
-        // Send authentication token
+        // Send authentication token if provided
         if (token) {
-            socket.send(JSON.stringify({
-                type: 'auth',
-                token: token
-            }));
+            socket.send(JSON.stringify({ type: 'auth', token }));
         }
     };
 
