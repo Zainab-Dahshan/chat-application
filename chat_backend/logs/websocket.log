@@ -166,3 +166,24 @@ ERROR 2025-10-16 00:50:13,856 consumers Traceback (most recent call last):
     raise TypeError(self.invalid_name_error.format("Group", name))
 TypeError: Group name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods, not chat_Zainab-Dahshan's Org
 
+INFO 2025-10-16 01:19:40,853 consumers WebSocket connection attempt for room: testroom
+WARNING 2025-10-16 01:19:40,883 consumers No valid authentication header provided
+INFO 2025-10-16 01:19:40,940 consumers WebSocket disconnect for user AnonymousUser from room testroom, close_code: 1006
+ERROR 2025-10-16 01:19:40,954 consumers Error updating user presence: NOT NULL constraint failed: chat_userpresence.user_id
+INFO 2025-10-16 01:19:40,962 consumers User AnonymousUser left room group: chat_testroom
+INFO 2025-10-16 01:22:13,001 consumers WebSocket connection attempt for room: testroom
+INFO 2025-10-16 01:22:13,004 consumers Attempting to validate JWT token
+INFO 2025-10-16 01:22:13,012 consumers Successfully authenticated user: websocketuser (ID: 4)
+INFO 2025-10-16 01:22:13,021 consumers JWT authentication successful for user_id: 4
+INFO 2025-10-16 01:22:13,022 consumers User websocketuser authenticated successfully
+INFO 2025-10-16 01:22:13,293 consumers User presence updated: websocketuser - online: True
+INFO 2025-10-16 01:22:13,294 consumers User websocketuser joined room group: chat_testroom
+INFO 2025-10-16 01:22:13,297 consumers Connection accepted for user websocketuser in room testroom
+INFO 2025-10-16 01:22:13,303 consumers Received message from user websocketuser in room testroom
+INFO 2025-10-16 01:22:13,317 consumers User websocketuser sending message in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-16 01:22:13,490 consumers Message broadcasted successfully from user websocketuser
+INFO 2025-10-16 01:22:13,495 consumers Broadcasting message to user websocketuser in room testroom: Hello from authenticated WebSocket test!...
+INFO 2025-10-16 01:22:13,499 consumers Message successfully sent to user websocketuser
+INFO 2025-10-16 01:22:15,315 consumers WebSocket disconnect for user websocketuser from room testroom, close_code: 1000
+INFO 2025-10-16 01:22:15,502 consumers User presence updated: websocketuser - online: False
+INFO 2025-10-16 01:22:15,503 consumers User websocketuser left room group: chat_testroom

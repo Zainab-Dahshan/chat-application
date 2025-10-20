@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connectToWebSocket } from './websocket';
+import { connectToWebSocket, sendWebSocketMessage } from './websocket';
 
 async function login(username, password) {
     const apiBase = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api';
@@ -21,7 +21,9 @@ function App() {
     const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
     const [status, setStatus] = useState('');
-    const [, setSocket] = useState(null);
+    const [socket, setSocket] = useState(null);
+    const [messageText, setMessageText] = useState('');
+    const [messages, setMessages] = useState([]);
 
     const handleLoginAndConnect = async () => {
         try {
@@ -30,7 +32,8 @@ function App() {
             setToken(access);
             setStatus('Login successful. Connecting to WebSocket...');
             const newSocket = connectToWebSocket(roomName, access, (msg) => {
-                console.log('Message from server:', msg);
+                // msg expected shape: { type: 'message', ... }
+                setMessages((prev) => [...prev, msg]);
             });
             setSocket(newSocket);
             setStatus('Connected.');
@@ -40,10 +43,24 @@ function App() {
         }
     };
 
+    const handleSendMessage = () => {
+        if (!socket) {
+            setStatus('Not connected.');
+            return;
+        }
+        if (!messageText.trim()) {
+            return;
+        }
+        const ok = sendWebSocketMessage(socket, messageText.trim());
+        if (ok) {
+            setMessageText('');
+        }
+    };
+
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '1rem', maxWidth: 640 }}>
             <h1>Chat Application</h1>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ marginBottom: '0.75rem' }}>
                 <input
                     type="text"
                     placeholder="Room name"
@@ -67,8 +84,30 @@ function App() {
                 />
                 <button onClick={handleLoginAndConnect}>Login & Connect</button>
             </div>
-            {status && <p>{status}</p>}
+            {status && <p style={{ marginTop: 0 }}>{status}</p>}
             {token && <p>Token acquired.</p>}
+
+            <div style={{ marginTop: '1rem' }}>
+                <input
+                    type="text"
+                    placeholder="Type a message"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                    style={{ marginRight: '0.5rem', width: '70%' }}
+                />
+                <button onClick={handleSendMessage}>Send</button>
+            </div>
+
+            <div style={{ marginTop: '1rem' }}>
+                <h2>Messages</h2>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    {messages.map((m, idx) => (
+                        <li key={idx} style={{ padding: '0.25rem 0', borderBottom: '1px solid #eee' }}>
+                            <code>{JSON.stringify(m)}</code>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }
