@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connectToWebSocket, sendWebSocketMessage } from './websocket';
+import { connectToWebSocket, sendWebSocketMessage, disconnectWebSocket } from './websocket';
 
 async function login(username, password) {
     const apiBase = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api';
@@ -22,21 +22,64 @@ function App() {
     const [token, setToken] = useState('');
     const [status, setStatus] = useState('');
     const [socket, setSocket] = useState(null);
+    const [connected, setConnected] = useState(false);
+    const [autoReconnect, setAutoReconnect] = useState(true);
+    const [reconnectInfo, setReconnectInfo] = useState('');
     const [messageText, setMessageText] = useState('');
     const [messages, setMessages] = useState([]);
 
     const handleLoginAndConnect = async () => {
         try {
             setStatus('Logging in...');
+            setReconnectInfo('');
             const access = await login(username, password);
             setToken(access);
             setStatus('Login successful. Connecting to WebSocket...');
-            const newSocket = connectToWebSocket(roomName, access, (msg) => {
-                // msg expected shape: { type: 'message', ... }
-                setMessages((prev) => [...prev, msg]);
-            });
+            const newSocket = connectToWebSocket(
+                roomName,
+                access,
+                // onMessage
+                (msg) => {
+                    setMessages((prev) => [...prev, msg]);
+                },
+                // onOpen
+                () => {
+                    setConnected(true);
+                    setStatus('Connected.');
+                    setReconnectInfo('');
+                },
+                // onClose
+                (event) => {
+                    setConnected(false);
+                    setStatus(`Disconnected${event && event.code ? ` (code ${event.code})` : '.'}`);
+                },
+                // onError
+                (error) => {
+                    console.error('WebSocket error:', error);
+                    setStatus('WebSocket error. Check console.');
+                },
+                // options
+                {
+                    autoReconnect,
+                    maxAttempts: Infinity,
+                    initialDelay: 500,
+                    maxDelay: 10000,
+                    backoffFactor: 1.7,
+                    jitter: 0.3,
+                    onSocketChange: (s) => setSocket(s),
+                    onReconnectAttempt: ({ attempt, delayMs }) => {
+                        setReconnectInfo(`Reconnecting (attempt ${attempt}) in ${(delayMs / 1000).toFixed(1)}s...`);
+                    },
+                    onReconnectStop: (reason) => {
+                        setReconnectInfo(`Reconnect stopped: ${reason}`);
+                    },
+                    shouldReconnect: (event) => {
+                        // do not auto-reconnect on normal closure 1000; helper already checks this
+                        return true;
+                    }
+                }
+            );
             setSocket(newSocket);
-            setStatus('Connected.');
         } catch (err) {
             console.error(err);
             setStatus('Login failed. Check credentials.');
@@ -44,7 +87,7 @@ function App() {
     };
 
     const handleSendMessage = () => {
-        if (!socket) {
+        if (!socket || !connected) {
             setStatus('Not connected.');
             return;
         }
@@ -55,6 +98,15 @@ function App() {
         if (ok) {
             setMessageText('');
         }
+    };
+
+    const handleDisconnect = () => {
+        if (!socket) return;
+        disconnectWebSocket(socket);
+        setConnected(false);
+        setSocket(null);
+        setReconnectInfo('');
+        setStatus('Disconnected.');
     };
 
     return (
@@ -82,9 +134,24 @@ function App() {
                     onChange={(e) => setPassword(e.target.value)}
                     style={{ marginRight: '0.5rem' }}
                 />
+                <label style={{ marginRight: '0.5rem' }}>
+                    <input
+                        type="checkbox"
+                        checked={autoReconnect}
+                        onChange={(e) => setAutoReconnect(e.target.checked)}
+                        style={{ marginRight: '0.25rem' }}
+                    />
+                    Auto-reconnect
+                </label>
                 <button onClick={handleLoginAndConnect}>Login & Connect</button>
+                <button onClick={handleDisconnect} style={{ marginLeft: '0.5rem' }} disabled={!connected && !socket}>Disconnect</button>
             </div>
+
             {status && <p style={{ marginTop: 0 }}>{status}</p>}
+            {reconnectInfo && <p style={{ marginTop: 0, color: '#555' }}>{reconnectInfo}</p>}
+            <p>
+                Connection: <strong style={{ color: connected ? 'green' : 'red' }}>{connected ? 'Connected' : 'Disconnected'}</strong>
+            </p>
             {token && <p>Token acquired.</p>}
 
             <div style={{ marginTop: '1rem' }}>
@@ -94,8 +161,9 @@ function App() {
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     style={{ marginRight: '0.5rem', width: '70%' }}
+                    disabled={!connected}
                 />
-                <button onClick={handleSendMessage}>Send</button>
+                <button onClick={handleSendMessage} disabled={!connected}>Send</button>
             </div>
 
             <div style={{ marginTop: '1rem' }}>
